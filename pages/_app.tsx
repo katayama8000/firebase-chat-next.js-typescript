@@ -7,7 +7,7 @@ import Link from 'next/link';
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider>
-      <Box maxW='840px'>
+      <Box maxW='1080px'>
         <Link href='/'>
           <Button ml={20} my={20}>
             戻る
