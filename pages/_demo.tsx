@@ -15,7 +15,7 @@ const validateEmail = (email: string) => {
   }
 };
 
-const Index3 = () => {
+const Index = () => {
   const {
     formState: { errors },
     handleSubmit,
@@ -71,4 +71,4 @@ const Index3 = () => {
   );
 };
 
-export default Index3;
+export default Index;

@@ -1,31 +1,4 @@
-import { Box, Container, Grid, GridItem, Stack, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
-import Link from 'next/link';
-import type { FC } from 'react';
-
-const LINKS_INDEX = [
-  { href: '/index1', name: 'Modal' },
-  { href: '/index2', name: 'react-hook-form1' },
-  { href: '/index3', name: 'react-hook-form2' },
-  { href: '/index4', name: 'index4' },
-  { href: '/index5', name: 'index5' },
-] as const;
-
-type Props = {
-  href: indexHrefType;
-  name: indexNameType;
-};
-
-export const LinkList: FC<Props> = ({ href, name }) => {
-  return (
-    <Box p={2}>
-      <Link href={href}>{name}</Link>
-    </Box>
-  );
-};
-
-type indexHrefType = typeof LINKS_INDEX[number]['href'];
-type indexNameType = typeof LINKS_INDEX[number]['name'];
 
 export default function Home() {
   return (
@@ -36,22 +9,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main>
-        <VStack>
-          <Container bg='blue.600' color='white' borderRadius={'md'} width={300}>
-            <Grid gap={6} p={4}>
-              {LINKS_INDEX.map((link) => {
-                return (
-                  <GridItem bg='blue.400' key={link.href} borderRadius={'md'}>
-                    <LinkList href={link.href} name={link.name} />
-                  </GridItem>
-                );
-              })}
-            </Grid>
-            <Stack direction={['column', 'row']} spacing='12px'></Stack>
-          </Container>
-        </VStack>
-      </main>
+      <main></main>
     </div>
   );
 }
