@@ -1,12 +1,20 @@
 import '../styles/globals.css';
 
-import { ChakraProvider } from '@chakra-ui/react';
+import { Box, Button, ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
+import Link from 'next/link';
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider>
-      <Component {...pageProps} />
+      <Box maxW='840px'>
+        <Link href='/'>
+          <Button ml={20} mt={20}>
+            戻る
+          </Button>
+        </Link>
+        <Component {...pageProps} />
+      </Box>
     </ChakraProvider>
   );
 };
