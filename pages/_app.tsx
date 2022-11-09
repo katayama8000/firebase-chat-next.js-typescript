@@ -9,7 +9,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <ChakraProvider>
       <Box maxW='840px'>
         <Link href='/'>
-          <Button ml={20} mt={20}>
+          <Button ml={20} my={20}>
             戻る
           </Button>
         </Link>
