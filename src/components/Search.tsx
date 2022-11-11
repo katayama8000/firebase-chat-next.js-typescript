@@ -1,8 +1,8 @@
-import type { User } from 'firebase/auth';
+/* eslint-disable @next/next/no-img-element */
 import type { DocumentData } from 'firebase/firestore';
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import type { FC } from 'react';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import { db } from '../lib/firebase/firebase';
 import { AuthContext } from '../state/AuthContext';
@@ -12,10 +12,10 @@ const Search: FC = () => {
   const [user, setUser] = useState<DocumentData | null>();
   const [err, setErr] = useState<boolean>(false);
 
-  const { currentUser } = useContext(AuthContext) as { currentUser: User };
+  const { currentUser } = useContext(AuthContext);
   console.log(currentUser, 'currentUser');
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     const q = query(collection(db, 'users'), where('displayName', '==', username));
 
     try {
@@ -26,18 +26,18 @@ const Search: FC = () => {
     } catch (err) {
       setErr(true);
     }
-  };
+  }, [username]);
 
-  const handleKey = (e: { code: string }) => {
-    e.code === 'Enter' && handleSearch();
-  };
+  const handleKey = useCallback(
+    (e: { code: string }) => {
+      e.code === 'Enter' && handleSearch();
+    },
+    [handleSearch]
+  );
 
-  const handleSelect = async () => {
-    // if (user) {
-    //   const combinedId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
-    // }
+  const handleSelect = useCallback(async () => {
     const combinedId = (() => {
-      if (user) {
+      if (user && currentUser) {
         return currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
       }
     })() as string;
@@ -45,7 +45,7 @@ const Search: FC = () => {
     try {
       const res = await getDoc(doc(db, 'chats', combinedId));
 
-      if (!res.exists() && user) {
+      if (!res.exists() && user && currentUser) {
         //create a chat in chats collection
         await setDoc(doc(db, 'chats', combinedId), { messages: [] });
 
@@ -72,7 +72,7 @@ const Search: FC = () => {
 
     setUser(null);
     setUsername('');
-  };
+  }, [currentUser, user]);
   return (
     <div className='search'>
       <div className='searchForm'>

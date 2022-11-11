@@ -15,28 +15,19 @@ export type ChatsType = {
 };
 const Messages: FC = () => {
   const [messages, setMessages] = useState<ChatsType[]>([]);
-  const { data } = useContext(ChatContext) as {
-    data: {
-      chatId: string;
-      user: {
-        displayName: string;
-        photoURL: string;
-        uid: string;
-      };
-    };
-  };
+  const { data } = useContext(ChatContext);
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, 'chats', data.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
-    });
+    if (data.chatId) {
+      const unSub = onSnapshot(doc(db, 'chats', data.chatId), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+      });
 
-    return () => {
-      unSub();
-    };
+      return () => {
+        unSub();
+      };
+    }
   }, [data.chatId]);
-
-  console.log(messages);
 
   return (
     <div className='messages'>

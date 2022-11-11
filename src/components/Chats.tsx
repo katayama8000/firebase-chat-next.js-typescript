@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import type { User } from 'firebase/auth';
 import type { DocumentData } from 'firebase/firestore';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { FC } from 'react';
@@ -7,29 +6,34 @@ import { useContext, useEffect, useState } from 'react';
 
 import { db } from '../lib/firebase/firebase';
 import { AuthContext } from '../state/AuthContext';
+import type { PickedUserType } from '../state/ChatContext';
 import { ChatContext } from '../state/ChatContext';
 
 const Chats: FC = () => {
-  const [chats, setChats] = useState<DocumentData | undefined>([]);
+  const [chats, setChats] = useState<DocumentData>([]);
 
-  const { currentUser } = useContext(AuthContext) as { currentUser: User };
+  const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, 'userChats', currentUser.uid), (doc) => {
-        setChats(doc?.data());
-      });
+      if (currentUser) {
+        const unsub = onSnapshot(doc(db, 'userChats', currentUser.uid), (doc) => {
+          if (doc.exists()) {
+            setChats(doc.data());
+          }
+        });
 
-      return () => {
-        unsub();
-      };
+        return () => {
+          unsub();
+        };
+      }
     };
 
     currentUser?.uid && getChats();
   }, [currentUser, currentUser?.uid]);
 
-  const handleSelect = (u: any) => {
+  const handleSelect = (u: PickedUserType) => {
     dispatch({ payload: u, type: 'CHANGE_USER' });
   };
 
