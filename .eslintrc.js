@@ -86,6 +86,6 @@ module.exports = {
         // typeキーのソート（ id は一番先頭に配置）
         "sort-keys-custom-order/type-keys": ["error", { orderedKeys: ["id"] }],
         // 使用していないインポートを禁止
-        "unused-imports/no-unused-imports": "error",
+        //"unused-imports/no-unused-imports": "error",
     },
 };
