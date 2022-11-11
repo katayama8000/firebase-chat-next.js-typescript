@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @next/next/no-img-element */
 import { signOut } from 'firebase/auth';
 import type { FC } from 'react';
@@ -15,7 +16,7 @@ const Navbar: FC = () => {
       <span className='logo'>Lama Chat</span>
       <div className='user'>
         {/* 後でNext.jsのImageに変更 */}
-        <img src={currentUser?.photoURL} alt='' />
+        <img src={currentUser?.photoURL!} alt='user' />
         <span>{currentUser?.displayName}</span>
         <button
           onClick={() => {

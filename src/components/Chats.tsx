@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+import type { DocumentData } from 'firebase/firestore';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { FC } from 'react';
 import { useContext, useEffect, useState } from 'react';
@@ -7,15 +9,15 @@ import { AuthContext } from '../state/AuthContext';
 import { ChatContext } from '../state/ChatContext';
 
 const Chats: FC = () => {
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState<DocumentData | undefined>([]);
 
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, 'userChats', currentUser.uid), (doc) => {
-        setChats(doc.data());
+      const unsub = onSnapshot(doc(db, 'userChats', currentUser!.uid), (doc) => {
+        setChats(doc?.data());
       });
 
       return () => {
@@ -24,9 +26,9 @@ const Chats: FC = () => {
     };
 
     currentUser?.uid && getChats();
-  }, [currentUser?.uid]);
+  }, [currentUser, currentUser?.uid]);
 
-  const handleSelect = (u) => {
+  const handleSelect = (u: any) => {
     dispatch({ payload: u, type: 'CHANGE_USER' });
   };
 

@@ -6,22 +6,21 @@ import { createContext, useEffect, useState } from 'react';
 //import type { User } from '../lib/firebase/firebase';
 import { auth } from '../lib/firebase/firebase';
 
-type Props = {
-  children: React.ReactNode;
-};
-
 type AuthContextProps = {
   currentUser: User | null | undefined;
 };
-
 export const AuthContext = createContext<AuthContextProps>({ currentUser: undefined });
 
-export const AuthContextProvider: FC<Props> = ({ children }) => {
+type ProviderProps = {
+  children: React.ReactNode;
+};
+
+export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user!);
+      setCurrentUser(user);
       console.log(user, 'user');
     });
 

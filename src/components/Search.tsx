@@ -1,3 +1,4 @@
+import type { DocumentData } from 'firebase/firestore';
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import type { FC } from 'react';
 import { useContext, useState } from 'react';
@@ -7,7 +8,7 @@ import { AuthContext } from '../state/AuthContext';
 
 const Search: FC = () => {
   const [username, setUsername] = useState<string>('');
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<DocumentData | null>();
   const [err, setErr] = useState<boolean>(false);
 
   const { currentUser } = useContext(AuthContext);
@@ -26,13 +27,13 @@ const Search: FC = () => {
     }
   };
 
-  const handleKey = (e) => {
+  const handleKey = (e: { code: string }) => {
     e.code === 'Enter' && handleSearch();
   };
 
   const handleSelect = async () => {
     //check whether the group(chats in firestore) exists, if not create
-    const combinedId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
+    const combinedId = currentUser!.uid > user!.uid ? currentUser!.uid + user!.uid : user!.uid + currentUser!.uid;
     try {
       const res = await getDoc(doc(db, 'chats', combinedId));
 
@@ -41,20 +42,20 @@ const Search: FC = () => {
         await setDoc(doc(db, 'chats', combinedId), { messages: [] });
 
         //create user chats
-        await updateDoc(doc(db, 'userChats', currentUser.uid), {
+        await updateDoc(doc(db, 'userChats', currentUser!.uid), {
           [combinedId + '.userInfo']: {
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            uid: user.uid,
+            displayName: user!.displayName,
+            photoURL: user!.photoURL,
+            uid: user!.uid,
           },
           [combinedId + '.date']: serverTimestamp(),
         });
 
-        await updateDoc(doc(db, 'userChats', user.uid), {
+        await updateDoc(doc(db, 'userChats', user!.uid), {
           [combinedId + '.userInfo']: {
-            displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
-            uid: currentUser.uid,
+            displayName: currentUser!.displayName,
+            photoURL: currentUser!.photoURL,
+            uid: currentUser!.uid,
           },
           [combinedId + '.date']: serverTimestamp(),
         });

@@ -12,7 +12,7 @@ const Messages: FC = () => {
   const { data } = useContext(ChatContext);
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, 'chats', data?.chatId), (doc) => {
+    const unSub = onSnapshot(doc(db, 'chats', data!.chatId!), (doc) => {
       doc.exists() && setMessages(doc.data().messages);
     });
 

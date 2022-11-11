@@ -10,7 +10,7 @@ import { ChatContext } from '../state/ChatContext';
 
 const Input = () => {
   const [text, setText] = useState('');
-  const [img, setImg] = useState(null);
+  const [image, setImage] = useState<File | null>(null);
 
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
@@ -18,10 +18,10 @@ const Input = () => {
   console.log(data, 'chatContext111');
 
   const handleSend = async () => {
-    if (img) {
+    if (image) {
       const storageRef = ref(storage, uuid());
 
-      const uploadTask = uploadBytesResumable(storageRef, img);
+      const uploadTask = uploadBytesResumable(storageRef, image);
 
       uploadTask.on(
         (error) => {
@@ -34,7 +34,7 @@ const Input = () => {
                 id: uuid(),
                 date: Timestamp.now(),
                 img: downloadURL,
-                senderId: currentUser.uid,
+                senderId: currentUser!.uid,
                 text,
               }),
             });
@@ -43,24 +43,24 @@ const Input = () => {
       );
     } else {
       console.log(data.chatId, 'data.chatId');
-      await updateDoc(doc(db, 'chats', data.chatId), {
+      await updateDoc(doc(db, 'chats', data!.chatId), {
         messages: arrayUnion({
           id: uuid(),
           date: Timestamp.now(),
-          senderId: currentUser.uid,
+          senderId: currentUser!.uid,
           text,
         }),
       });
     }
 
-    await updateDoc(doc(db, 'userChats', currentUser.uid), {
+    await updateDoc(doc(db, 'userChats', currentUser!.uid), {
       [data.chatId + '.lastMessage']: {
         text,
       },
       [data.chatId + '.date']: serverTimestamp(),
     });
 
-    await updateDoc(doc(db, 'userChats', data.user.uid), {
+    await updateDoc(doc(db, 'userChats', data.user!.uid), {
       [data.chatId + '.lastMessage']: {
         text,
       },
@@ -68,7 +68,7 @@ const Input = () => {
     });
 
     setText('');
-    setImg(null);
+    setImage(null);
   };
   return (
     <div className='input'>
@@ -87,7 +87,7 @@ const Input = () => {
           style={{ display: 'none' }}
           id='file'
           onChange={(e) => {
-            return setImg(e.target.files[0]);
+            return setImage(e.target.files![0]);
           }}
         />
         <label htmlFor='file'>
