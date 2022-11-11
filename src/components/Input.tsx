@@ -1,4 +1,3 @@
-import type { User } from 'firebase/auth';
 import { arrayUnion, doc, serverTimestamp, Timestamp, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
@@ -8,20 +7,14 @@ import { v4 as uuid } from 'uuid';
 
 import { db, storage } from '../lib/firebase/firebase';
 import { AuthContext } from '../state/AuthContext';
-import type { PickedUserType } from '../state/ChatContext';
 import { ChatContext } from '../state/ChatContext';
 
 const Input = () => {
   const [text, setText] = useState<string>('');
   const [image, setImage] = useState<File | null | undefined>(null);
 
-  const { currentUser } = useContext(AuthContext) as { currentUser: User };
-  const { data } = useContext(ChatContext) as {
-    data: {
-      chatId: string;
-      user: PickedUserType;
-    };
-  };
+  const { currentUser } = useContext(AuthContext);
+  const { data } = useContext(ChatContext);
 
   const handleSend = async () => {
     if (image) {
@@ -31,42 +24,49 @@ const Input = () => {
 
       uploadTask.on('state_changed', () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-          await updateDoc(doc(db, 'chats', data.chatId), {
-            messages: arrayUnion({
-              id: uuid(),
-              date: Timestamp.now(),
-              img: downloadURL,
-              senderId: currentUser.uid,
-              text,
-            }),
-          });
+          if (data.chatId && currentUser) {
+            await updateDoc(doc(db, 'chats', data.chatId), {
+              messages: arrayUnion({
+                id: uuid(),
+                date: Timestamp.now(),
+                img: downloadURL,
+                senderId: currentUser.uid,
+                text,
+              }),
+            });
+          }
         });
       });
     } else {
-      console.log(data.chatId, 'data.chatId');
-      await updateDoc(doc(db, 'chats', data.chatId), {
-        messages: arrayUnion({
-          id: uuid(),
-          date: Timestamp.now(),
-          senderId: currentUser.uid,
+      if (data.chatId && currentUser) {
+        await updateDoc(doc(db, 'chats', data.chatId), {
+          messages: arrayUnion({
+            id: uuid(),
+            date: Timestamp.now(),
+            senderId: currentUser.uid,
+            text,
+          }),
+        });
+      }
+    }
+
+    if (currentUser) {
+      await updateDoc(doc(db, 'userChats', currentUser.uid), {
+        [data.chatId + '.lastMessage']: {
           text,
-        }),
+        },
+        [data.chatId + '.date']: serverTimestamp(),
       });
     }
 
-    await updateDoc(doc(db, 'userChats', currentUser.uid), {
-      [data.chatId + '.lastMessage']: {
-        text,
-      },
-      [data.chatId + '.date']: serverTimestamp(),
-    });
-
-    await updateDoc(doc(db, 'userChats', data.user.uid), {
-      [data.chatId + '.lastMessage']: {
-        text,
-      },
-      [data.chatId + '.date']: serverTimestamp(),
-    });
+    if (data.user && data.user.uid) {
+      await updateDoc(doc(db, 'userChats', data.user.uid), {
+        [data.chatId + '.lastMessage']: {
+          text,
+        },
+        [data.chatId + '.date']: serverTimestamp(),
+      });
+    }
 
     setText('');
     setImage(null);
