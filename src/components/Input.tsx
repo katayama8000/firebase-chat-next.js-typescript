@@ -13,7 +13,7 @@ import { ChatContext } from '../state/ChatContext';
 
 const Input = () => {
   const [text, setText] = useState<string>('');
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | null | undefined>(null);
 
   const { currentUser } = useContext(AuthContext) as { currentUser: User };
   const { data } = useContext(ChatContext) as {
@@ -88,7 +88,7 @@ const Input = () => {
           style={{ display: 'none' }}
           id='file'
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            return setImage(e.target.files[0]);
+            return setImage(e.target.files?.[0]);
           }}
         />
         <label htmlFor='file'>
