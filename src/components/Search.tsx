@@ -1,3 +1,4 @@
+import type { User } from 'firebase/auth';
 import type { DocumentData } from 'firebase/firestore';
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import type { FC } from 'react';
@@ -11,7 +12,7 @@ const Search: FC = () => {
   const [user, setUser] = useState<DocumentData | null>();
   const [err, setErr] = useState<boolean>(false);
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext) as { currentUser: User };
   console.log(currentUser, 'currentUser');
 
   const handleSearch = async () => {
@@ -32,30 +33,37 @@ const Search: FC = () => {
   };
 
   const handleSelect = async () => {
-    //check whether the group(chats in firestore) exists, if not create
-    const combinedId = currentUser!.uid > user!.uid ? currentUser!.uid + user!.uid : user!.uid + currentUser!.uid;
+    // if (user) {
+    //   const combinedId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
+    // }
+    const combinedId = (() => {
+      if (user) {
+        return currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
+      }
+    })() as string;
+
     try {
       const res = await getDoc(doc(db, 'chats', combinedId));
 
-      if (!res.exists()) {
+      if (!res.exists() && user) {
         //create a chat in chats collection
         await setDoc(doc(db, 'chats', combinedId), { messages: [] });
 
         //create user chats
-        await updateDoc(doc(db, 'userChats', currentUser!.uid), {
+        await updateDoc(doc(db, 'userChats', currentUser.uid), {
           [combinedId + '.userInfo']: {
-            displayName: user!.displayName,
-            photoURL: user!.photoURL,
-            uid: user!.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            uid: user.uid,
           },
           [combinedId + '.date']: serverTimestamp(),
         });
 
-        await updateDoc(doc(db, 'userChats', user!.uid), {
+        await updateDoc(doc(db, 'userChats', user.uid), {
           [combinedId + '.userInfo']: {
-            displayName: currentUser!.displayName,
-            photoURL: currentUser!.photoURL,
-            uid: currentUser!.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+            uid: currentUser.uid,
           },
           [combinedId + '.date']: serverTimestamp(),
         });

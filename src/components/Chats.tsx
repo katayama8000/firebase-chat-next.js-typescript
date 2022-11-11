@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import type { User } from 'firebase/auth';
 import type { DocumentData } from 'firebase/firestore';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { FC } from 'react';
@@ -11,12 +12,12 @@ import { ChatContext } from '../state/ChatContext';
 const Chats: FC = () => {
   const [chats, setChats] = useState<DocumentData | undefined>([]);
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext) as { currentUser: User };
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, 'userChats', currentUser!.uid), (doc) => {
+      const unsub = onSnapshot(doc(db, 'userChats', currentUser.uid), (doc) => {
         setChats(doc?.data());
       });
 

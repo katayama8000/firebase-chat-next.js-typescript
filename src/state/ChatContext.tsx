@@ -4,17 +4,28 @@ import { createContext, useContext, useReducer } from 'react';
 
 import { AuthContext } from './AuthContext';
 
+export type PickedUserType = Pick<User, 'displayName' | 'photoURL' | 'uid'>;
+
 type Action = {
-  payload: Pick<User, 'displayName' | 'photoURL' | 'uid'>;
+  payload: PickedUserType;
   type: 'CHANGE_USER' | string;
 };
 
 type ChatContextProps = {
   data: {
     chatId: string | null;
-    user: Pick<User, 'displayName' | 'photoURL' | 'uid'> | null;
+    user: PickedUserType | null;
   };
   dispatch: React.Dispatch<Action>;
+};
+
+type ProviderProps = {
+  children: React.ReactNode;
+};
+
+export type State = {
+  chatId: string | null;
+  user: PickedUserType | null;
 };
 
 export const ChatContext = createContext<ChatContextProps>({
@@ -31,33 +42,22 @@ export const ChatContext = createContext<ChatContextProps>({
   },
 });
 
-type ProviderProps = {
-  children: React.ReactNode;
-};
-
 export const ChatContextProvider: FC<ProviderProps> = ({ children }) => {
-  const { currentUser } = useContext(AuthContext);
-  console.log(currentUser, 'currentUser333');
+  const { currentUser } = useContext(AuthContext) as { currentUser: User };
+
   const INITIAL_STATE = {
     chatId: 'null',
     user: null,
   };
 
-  type State = {
-    chatId: string | null;
-    user: Pick<User, 'displayName' | 'photoURL' | 'uid'> | null;
-  };
-
   const chatReducer = (state: State, action: Action) => {
-    console.log(action, 'action', state, 'state', 'こここここここここ');
-
     switch (action.type) {
       case 'CHANGE_USER':
         return {
           chatId:
-            currentUser!.uid > action.payload.uid
-              ? currentUser!.uid + action.payload.uid
-              : action.payload.uid + currentUser!.uid,
+            currentUser.uid > action.payload.uid
+              ? currentUser.uid + action.payload.uid
+              : action.payload.uid + currentUser.uid,
           user: action.payload,
         };
 
@@ -67,7 +67,6 @@ export const ChatContextProvider: FC<ProviderProps> = ({ children }) => {
   };
 
   const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
-  console.log(state, 'stateaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
   return <ChatContext.Provider value={{ data: state, dispatch }}>{children}</ChatContext.Provider>;
 };

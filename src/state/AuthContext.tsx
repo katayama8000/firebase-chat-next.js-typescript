@@ -3,11 +3,10 @@ import { onAuthStateChanged } from 'firebase/auth';
 import type { FC } from 'react';
 import { createContext, useEffect, useState } from 'react';
 
-//import type { User } from '../lib/firebase/firebase';
 import { auth } from '../lib/firebase/firebase';
 
 type AuthContextProps = {
-  currentUser: User | null | undefined;
+  currentUser: User | undefined;
 };
 export const AuthContext = createContext<AuthContextProps>({ currentUser: undefined });
 
@@ -16,17 +15,16 @@ type ProviderProps = {
 };
 
 export const AuthContextProvider: FC<ProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined);
+  const [currentUser, setCurrentUser] = useState<User>();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      console.log(user, 'user');
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      }
     });
 
-    return () => {
-      unsub();
-    };
+    return unsubscribe;
   }, []);
 
   return <AuthContext.Provider value={{ currentUser: currentUser }}>{children}</AuthContext.Provider>;
