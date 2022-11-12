@@ -36,7 +36,6 @@ const Index = () => {
             type='email'
             id='email'
             {...register('email', {
-              required: 'Email is required',
               validate: validateEmail,
             })}
           />
