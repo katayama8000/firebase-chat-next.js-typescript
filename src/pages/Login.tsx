@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { auth } from '../lib/firebase/firebase';
 import type { LoginInput } from '../types/Input.model';
 
-const validateEmail = (email: string) => {
+export const validateEmail = (email: string) => {
   if (!email) {
     return 'メールアドレスを入力してください';
   }
