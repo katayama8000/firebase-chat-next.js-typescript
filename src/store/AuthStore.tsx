@@ -7,7 +7,7 @@ import { auth } from '../lib/firebase/firebase';
 
 class AuthStore {
   @observable
-  user: User | null = null;
+  user: { currentUser: User | null } = { currentUser: null };
 
   constructor() {
     makeObservable(this);
@@ -18,7 +18,7 @@ class AuthStore {
 
   @action
   setUser(user: User) {
-    this.user = user;
+    this.user.currentUser = user;
   }
 
   @computed

@@ -13,7 +13,6 @@ const Search: FC = () => {
   const [err, setErr] = useState<boolean>(false);
 
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser, 'currentUser');
 
   const handleSearch = useCallback(async () => {
     const q = query(collection(db, 'users'), where('displayName', '==', username));
