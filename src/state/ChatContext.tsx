@@ -43,7 +43,7 @@ export const ChatContext = createContext<ChatContextProps>({
 });
 
 export const ChatContextProvider: FC<ProviderProps> = ({ children }) => {
-  const { currentUser } = useContext(AuthContext) as { currentUser: User };
+  const { currentUser } = useContext(AuthContext);
 
   const INITIAL_STATE = {
     chatId: 'null',
@@ -53,13 +53,15 @@ export const ChatContextProvider: FC<ProviderProps> = ({ children }) => {
   const chatReducer = (state: State, action: Action) => {
     switch (action.type) {
       case 'CHANGE_USER':
-        return {
-          chatId:
-            currentUser.uid > action.payload.uid
-              ? currentUser.uid + action.payload.uid
-              : action.payload.uid + currentUser.uid,
-          user: action.payload,
-        };
+        if (currentUser) {
+          return {
+            chatId:
+              currentUser.uid > action.payload.uid
+                ? currentUser.uid + action.payload.uid
+                : action.payload.uid + currentUser.uid,
+            user: action.payload,
+          };
+        }
 
       default:
         return state;
