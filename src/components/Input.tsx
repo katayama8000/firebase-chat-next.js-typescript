@@ -39,6 +39,11 @@ const Input = () => {
       });
     } else {
       if (data.chatId && currentUser) {
+        if (text === '') {
+          alert('Please enter a message');
+          return;
+        }
+
         await updateDoc(doc(db, 'chats', data.chatId), {
           messages: arrayUnion({
             id: uuid(),
