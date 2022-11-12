@@ -18,7 +18,7 @@ const Navbar: FC = () => {
         <span>{currentUser?.displayName}</span>
         <button
           onClick={() => {
-            return signOut(auth);
+            signOut(auth);
           }}
         >
           logout
