@@ -1,7 +1,7 @@
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { action, autorun, computed, makeObservable, observable } from 'mobx';
-import router from 'next/router';
+import Router from 'next/router';
 
 import { auth } from '../lib/firebase/firebase';
 
@@ -24,15 +24,15 @@ class AuthStore {
   @computed
   get getUser() {
     onAuthStateChanged(auth, (user) => {
-      console.log(user, 'ここが見たい2');
-      if (user) {
+      if (user?.displayName) {
         this.setUser(user);
       } else {
-        if (router.pathname !== '/Login' && router.pathname !== '/Register') {
-          router.push('/Login');
+        if (Router.pathname !== '/Login' && Router.pathname !== '/Register') {
+          Router.push('/Login');
         }
       }
     });
+    console.log(this.user, 'getUser');
     return this.user;
   }
 }

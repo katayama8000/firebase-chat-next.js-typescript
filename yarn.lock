@@ -2308,6 +2308,11 @@ eslint-plugin-jsx-a11y@^6.5.1:
     minimatch "^3.1.2"
     semver "^6.3.0"
 
+eslint-plugin-mobx@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-mobx/-/eslint-plugin-mobx-0.0.9.tgz#9ea5580718c69b8d289c74c1c14fc77d6916322e"
+  integrity sha512-Gef0FNICXmPf3b4UPWtVJ4hP1BsT8tLbMPYqi44K+yIw1JaRKVn1THWG71DjzXx6bIhRR5aCrPFDtrStRgCTLg==
+
 eslint-plugin-react-hooks@^4.5.0:
   version "4.6.0"
   resolved "https://registry.npmjs.org/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.6.0.tgz"
@@ -3147,6 +3152,18 @@ minimist@^1.2.0, minimist@^1.2.6:
   version "1.2.7"
   resolved "https://registry.npmjs.org/minimist/-/minimist-1.2.7.tgz"
   integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
+
+mobx-react-lite@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.0.tgz#d59156a96889cdadad751e5e4dab95f28926dfff"
+  integrity sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==
+
+mobx-react@^7.5.3:
+  version "7.5.3"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-7.5.3.tgz#74b1c148d2f2a1affab3153ea570ab52c7eff70c"
+  integrity sha512-+ltotliKt4Bjn3d8taZH/VFAcRUbaASvsM8/QSvmHXcZ++RZwaFtjl9JkIosy1byaJGEDS3EFFx2InRm2VaSUw==
+  dependencies:
+    mobx-react-lite "^3.4.0"
 
 mobx@^6.6.2:
   version "6.6.2"
