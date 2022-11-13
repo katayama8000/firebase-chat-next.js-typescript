@@ -6,9 +6,9 @@ import { AuthContext } from './AuthContext';
 
 export type PickedUserType = Pick<User, 'displayName' | 'photoURL' | 'uid'>;
 
-type Action = {
+export type Action = {
   payload: PickedUserType;
-  type: 'CHANGE_USER' | string;
+  type: 'CHANGE_USER';
 };
 
 type ChatContextProps = {

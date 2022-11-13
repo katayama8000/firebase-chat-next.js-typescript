@@ -1,20 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@chakra-ui/react';
+import type { User } from 'firebase/auth';
 import type { DocumentData } from 'firebase/firestore';
 import { doc, onSnapshot } from 'firebase/firestore';
+import { observer } from 'mobx-react';
 import type { FC } from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { db } from '../lib/firebase/firebase';
-import { AuthContext } from '../state/AuthContext';
 import type { PickedUserType } from '../state/ChatContext';
-import { ChatContext } from '../state/ChatContext';
+import { authStore } from '../store/AuthStore';
+import { chatStore } from '../store/ChatStore';
 
-const Chats: FC = () => {
+const Chats: FC = observer(() => {
   const [chats, setChats] = useState<DocumentData>([]);
 
-  const { currentUser } = useContext(AuthContext);
-  const { dispatch } = useContext(ChatContext);
+  const { currentUser } = authStore.user as { currentUser: User };
 
   useEffect(() => {
     const getChats = () => {
@@ -35,11 +36,14 @@ const Chats: FC = () => {
   }, [currentUser, currentUser?.uid]);
 
   const handleSelect = (u: PickedUserType) => {
-    dispatch({ payload: u, type: 'CHANGE_USER' });
+    if (currentUser) {
+      chatStore.dispatch(u, currentUser);
+    }
   };
 
   return (
     <div className='chats'>
+      {/* ユーザーの表示順を更新日順で表示する */}
       {Object.entries(chats)
         ?.sort((a, b) => {
           return b[1].date - a[1].date;
@@ -71,6 +75,6 @@ const Chats: FC = () => {
         })}
     </div>
   );
-};
+});
 
 export default Chats;

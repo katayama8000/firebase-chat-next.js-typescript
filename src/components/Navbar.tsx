@@ -1,18 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@chakra-ui/react';
 import { signOut } from 'firebase/auth';
+import { observer } from 'mobx-react';
 import type { FC } from 'react';
-import { useContext } from 'react';
 
 import { auth } from '../lib/firebase/firebase';
-import { AuthContext } from '../state/AuthContext';
+import { authStore } from '../store/AuthStore';
 
-const Navbar: FC = () => {
-  const { currentUser } = useContext(AuthContext);
+const Navbar: FC = observer(() => {
+  const { currentUser } = authStore.user;
 
   return (
     <div className='navbar'>
-      <span className='logo'>Lama Chat</span>
+      <span className='logo'>katayama Chat</span>
       <div className='user'>
         {/* 後でNext.jsのImageに変更 */}
         {currentUser?.photoURL && <img src={currentUser.photoURL} alt='' />}
@@ -28,6 +28,6 @@ const Navbar: FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Navbar;

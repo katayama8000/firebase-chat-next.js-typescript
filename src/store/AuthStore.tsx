@@ -1,6 +1,6 @@
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
-import { action, autorun, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import Router from 'next/router';
 
 import { auth } from '../lib/firebase/firebase';
@@ -11,9 +11,6 @@ class AuthStore {
 
   constructor() {
     makeObservable(this);
-    autorun(() => {
-      console.log(this.user);
-    });
   }
 
   @action
@@ -32,7 +29,6 @@ class AuthStore {
         }
       }
     });
-    console.log(this.user, 'getUser');
     return this.user;
   }
 }
