@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { Button } from '@chakra-ui/react';
 import type { DocumentData } from 'firebase/firestore';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { FC } from 'react';
@@ -57,6 +58,14 @@ const Chats: FC = () => {
                 <span>{chat[1].userInfo.displayName}</span>
                 <p>{chat[1].lastMessage?.text}</p>
               </div>
+              <Button
+                colorScheme='teal'
+                onClick={() => {
+                  console.log(chat);
+                }}
+              >
+                check
+              </Button>
             </div>
           );
         })}

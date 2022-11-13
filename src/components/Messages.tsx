@@ -31,8 +31,8 @@ const Messages: FC = () => {
 
   return (
     <div className='messages'>
-      {messages.map((m) => {
-        return <Message message={m} key={m.id} />;
+      {messages.map((message) => {
+        return <Message message={message} key={message.id} />;
       })}
     </div>
   );

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { Button } from '@chakra-ui/react';
 import { signOut } from 'firebase/auth';
 import type { FC } from 'react';
 import { useContext } from 'react';
@@ -16,13 +17,14 @@ const Navbar: FC = () => {
         {/* 後でNext.jsのImageに変更 */}
         {currentUser?.photoURL && <img src={currentUser.photoURL} alt='' />}
         <span>{currentUser?.displayName}</span>
-        <button
+        <Button
+          size='xs'
           onClick={() => {
             signOut(auth);
           }}
         >
           logout
-        </button>
+        </Button>
       </div>
     </div>
   );
