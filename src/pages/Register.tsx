@@ -15,7 +15,6 @@ const Register: NextPage = () => {
   const { push } = useRouter();
 
   const handleSubmit = async (e: any) => {
-    console.log(e, 'event');
     setIsLoading(true);
     e.preventDefault();
     const displayName = e.target[0].value;
@@ -26,7 +25,6 @@ const Register: NextPage = () => {
     try {
       //Create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(res);
 
       //Create a unique image name
       const date = new Date().getTime();
@@ -52,7 +50,6 @@ const Register: NextPage = () => {
             await setDoc(doc(db, 'userChats', res.user.uid), {});
             push('/');
           } catch (err) {
-            console.log(err);
             setErr(true);
             setIsLoading(false);
           }

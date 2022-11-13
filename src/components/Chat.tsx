@@ -1,18 +1,18 @@
+import { observer } from 'mobx-react';
 import Image from 'next/image';
 import type { FC } from 'react';
-import { useContext } from 'react';
 
-import { ChatContext } from '../state/ChatContext';
+import { chatStore } from '../store/ChatStore';
 import Input from './Input';
 import Messages from './Messages';
 
-const Chat: FC = () => {
-  const { data } = useContext(ChatContext);
+const Chat: FC = observer(() => {
+  const state = chatStore.state;
 
   return (
     <div className='chat'>
       <div className='chatInfo'>
-        <span>{data?.user?.displayName}</span>
+        <span style={{ color: 'orange' }}>{state.user ? state.user.displayName : 'select your freinds'}</span>
         <div className='chatIcons'>
           <Image src='/img/cam.png' alt='cam' width={24} height={24} />
           <Image src='/img/more.png' alt='more' width={24} height={24} />
@@ -23,6 +23,6 @@ const Chat: FC = () => {
       <Input />
     </div>
   );
-};
+});
 
 export default Chat;

@@ -18,6 +18,8 @@ module.exports = {
         "simple-import-sort",
         "import",
         "unused-imports",
+        "react",
+        "mobx",
     ],
     root: true,
     rules: {

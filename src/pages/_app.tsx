@@ -4,17 +4,13 @@ import '../styles/style.scss';
 import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
 
-import { AuthContextProvider } from '../state/AuthContext';
-import { ChatContextProvider } from '../state/ChatContext';
+import { authStore } from '../store/AuthStore';
 
 const App = ({ Component, pageProps }: AppProps) => {
+  authStore.getUser;
   return (
     <ChakraProvider>
-      <AuthContextProvider>
-        <ChatContextProvider>
-          <Component {...pageProps} />
-        </ChatContextProvider>
-      </AuthContextProvider>
+      <Component {...pageProps} />
     </ChakraProvider>
   );
 };

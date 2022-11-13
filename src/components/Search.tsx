@@ -1,19 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 import type { DocumentData } from 'firebase/firestore';
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import { observer } from 'mobx-react';
 import type { FC } from 'react';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { db } from '../lib/firebase/firebase';
-import { AuthContext } from '../state/AuthContext';
+import { authStore } from '../store/AuthStore';
 
-const Search: FC = () => {
+const Search: FC = observer(() => {
   const [username, setUsername] = useState<string>('');
   const [user, setUser] = useState<DocumentData | null>();
   const [err, setErr] = useState<boolean>(false);
 
-  const { currentUser } = useContext(AuthContext);
-  console.log(currentUser, 'currentUser');
+  const { currentUser } = authStore.user;
 
   const handleSearch = useCallback(async () => {
     const q = query(collection(db, 'users'), where('displayName', '==', username));
@@ -97,6 +97,6 @@ const Search: FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default Search;

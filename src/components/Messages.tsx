@@ -1,10 +1,11 @@
 //import { doc, onSnapshot } from 'firebase/firestore';
 import { doc, onSnapshot } from 'firebase/firestore';
+import { observer } from 'mobx-react';
 import type { FC } from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { db } from '../lib/firebase/firebase';
-import { ChatContext } from '../state/ChatContext';
+import { chatStore } from '../store/ChatStore';
 import Message from './Message';
 
 export type ChatsType = {
@@ -13,13 +14,13 @@ export type ChatsType = {
   senderId: string;
   text: string;
 };
-const Messages: FC = () => {
+const Messages: FC = observer(() => {
   const [messages, setMessages] = useState<ChatsType[]>([]);
-  const { data } = useContext(ChatContext);
+  const state = chatStore.state;
 
   useEffect(() => {
-    if (data.chatId) {
-      const unSub = onSnapshot(doc(db, 'chats', data.chatId), (doc) => {
+    if (state.chatId) {
+      const unSub = onSnapshot(doc(db, 'chats', state.chatId), (doc) => {
         doc.exists() && setMessages(doc.data().messages);
       });
 
@@ -27,7 +28,7 @@ const Messages: FC = () => {
         unSub();
       };
     }
-  }, [data.chatId]);
+  }, [state.chatId]);
 
   return (
     <div className='messages'>
@@ -36,6 +37,6 @@ const Messages: FC = () => {
       })}
     </div>
   );
-};
+});
 
 export default Messages;

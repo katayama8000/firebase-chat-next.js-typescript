@@ -1,19 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import type { User } from 'firebase/auth';
+import { observer } from 'mobx-react';
 import type { FC } from 'react';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { AuthContext } from '../state/AuthContext';
-import { ChatContext } from '../state/ChatContext';
+import { authStore } from '../store/AuthStore';
+import { chatStore } from '../store/ChatStore';
 import type { ChatsType } from './Messages';
 
 type Props = {
   message: ChatsType;
 };
 
-const Message: FC<Props> = ({ message }) => {
-  const { currentUser } = useContext(AuthContext) as { currentUser: User };
-  const { data } = useContext(ChatContext);
+const Message: FC<Props> = observer(({ message }) => {
+  const { currentUser } = authStore.user as { currentUser: User };
+  const state = chatStore.state;
 
   const ref = useRef<null | HTMLDivElement>(null);
 
@@ -24,8 +25,8 @@ const Message: FC<Props> = ({ message }) => {
   return (
     <div ref={ref} className={`message ${message.senderId === currentUser.uid && 'owner'}`}>
       <div className='messageInfo'>
-        {currentUser.photoURL && data.user && data.user.photoURL && (
-          <img src={message.senderId === currentUser.uid ? currentUser.photoURL : data.user.photoURL} alt='' />
+        {currentUser.photoURL && state.user && state.user.photoURL && (
+          <img src={message.senderId === currentUser.uid ? currentUser.photoURL : state.user.photoURL} alt='' />
         )}
         <span>just now</span>
       </div>
@@ -35,6 +36,6 @@ const Message: FC<Props> = ({ message }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Message;
