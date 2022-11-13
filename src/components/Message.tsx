@@ -6,10 +6,10 @@ import { useEffect, useRef } from 'react';
 
 import { authStore } from '../store/AuthStore';
 import { chatStore } from '../store/ChatStore';
-import type { ChatsType } from './Messages';
+import type { MessageType } from './Messages';
 
 type Props = {
-  message: ChatsType;
+  message: MessageType;
 };
 
 const Message: FC<Props> = observer(({ message }) => {

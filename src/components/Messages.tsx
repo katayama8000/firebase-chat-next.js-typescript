@@ -8,14 +8,14 @@ import { db } from '../lib/firebase/firebase';
 import { chatStore } from '../store/ChatStore';
 import Message from './Message';
 
-export type ChatsType = {
+export type MessageType = {
   id: string;
   img: string;
   senderId: string;
   text: string;
 };
 const Messages: FC = observer(() => {
-  const [messages, setMessages] = useState<ChatsType[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const state = chatStore.state;
 
   useEffect(() => {
